@@ -1,0 +1,27 @@
+# Bytecode and cache
+__pycache__/
+*.py[cod]
+
+# macOS metadata
+.DS_Store
+**/.DS_Store
+
+# Large model artifacts
+axspa-system-complete.tar.gz
+Bio_ClinicalBERT/
+model/
+*.pth
+*.bin
+
+# Generated data and logs
+log/
+results/
+evaluation/uploads/
+evaluation/test_mri.npy
+temp_*.npy
+
+# Notebooks checkpoints or virtual envs (optional placeholders)
+.ipynb_checkpoints/
+venv/
+.venv/
+

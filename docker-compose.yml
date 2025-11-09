@@ -1,0 +1,65 @@
+version: '3.8'
+
+services:
+  # axSpA应用服务
+  axspa-app:
+    build: .
+    container_name: axspa-app
+    ports:
+      - "5500:5500"
+    environment:
+      - MYSQL_HOST=axspa-db
+      - MYSQL_PORT=3306
+      - MYSQL_USER=root
+      - MYSQL_PASSWORD=axspa@2024
+      - MYSQL_DB=axspa
+    volumes:
+      - ./evaluation/uploads:/app/evaluation/uploads
+      - ./evaluation/log:/app/evaluation/log
+      - ./evaluation/static:/app/evaluation/static
+    depends_on:
+      - axspa-db
+    restart: unless-stopped
+    networks:
+      - axspa-network
+
+  # MySQL数据库服务
+  axspa-db:
+    image: mysql:8.0
+    container_name: axspa-db
+    environment:
+      - MYSQL_ROOT_PASSWORD=axspa@2024
+      - MYSQL_DATABASE=axspa
+      - MYSQL_USER=axspa_user
+      - MYSQL_PASSWORD=axspa_pass
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./init_database.sql:/docker-entrypoint-initdb.d/init_database.sql
+    ports:
+      - "3306:3306"
+    restart: unless-stopped
+    networks:
+      - axspa-network
+
+  # Nginx反向代理
+  nginx:
+    image: nginx:alpine
+    container_name: axspa-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./evaluation/static:/var/www/static
+    depends_on:
+      - axspa-app
+    restart: unless-stopped
+    networks:
+      - axspa-network
+
+volumes:
+  mysql_data:
+
+networks:
+  axspa-network:
+    driver: bridge 
