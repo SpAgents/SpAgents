@@ -41,7 +41,7 @@ time_consumption = dict()
 res_df = pd.DataFrame(columns=["patient_id", "res"])
 
 # ✅ 只诊断一个指定的病人
-patient_id = "K1041027"
+patient_id = "PATIENT_ID"
 query = f"对于病人{patient_id}，请使用EdemaSystem工具，结合其MRI（路径已知），给出axSpA的诊断。"
 start_time = time.time()
 
